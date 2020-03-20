@@ -1,0 +1,8 @@
+iam_role_name: airflow_platform_user_data
+
+secrets: true
+
+s3:
+  read_write:
+    - alpha-airflow-platform-user-data/*
+
