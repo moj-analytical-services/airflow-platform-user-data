@@ -1,5 +1,9 @@
 # Auth0 Platform User Data
 
+Queries Auth0's API to get data on current users. This is exported in csv format to an S3 bucket.
+
+This code is deployed as an airflow job: `auth0-user-exports`
+
 ##### Query Auth0's API and export data in csv format to an S3 bucket
 
 ### Prerequisites
