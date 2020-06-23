@@ -11,12 +11,14 @@ def get_users_from_auth0(auth0_conn: Auth0, last_login):
     """
 
     t = last_login
-    query = f'last_login:[{t}]'
+    query = f'identities.connection:"github" AND last_login:[{t}]'
 
     users_list = auth0_conn.users.list(q=query)
 
     total_users = users_list['total']
+    print(total_users)
     page_size = users_list['length']
+    print(page_size)
 
     # don't waste the first request
     for u in users_list['users']:
