@@ -10,12 +10,11 @@ from auth0.v3.management import Auth0
 from common import get_users_from_auth0
 
 
-
 try:
-    AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
-    NON_INTERACTIVE_CLIENT_ID = os.environ['NON_INTERACTIVE_CLIENT_ID']
-    NON_INTERACTIVE_CLIENT_SECRET = os.environ['NON_INTERACTIVE_CLIENT_SECRET']
-    BUCKET_NAME = os.environ['BUCKET_NAME']
+    AUTH0_DOMAIN = os.environ["AUTH0_DOMAIN"]
+    NON_INTERACTIVE_CLIENT_ID = os.environ["NON_INTERACTIVE_CLIENT_ID"]
+    NON_INTERACTIVE_CLIENT_SECRET = os.environ["NON_INTERACTIVE_CLIENT_SECRET"]
+    BUCKET_NAME = os.environ["BUCKET_NAME"]
 except KeyError as e:
     print(e)
     raise ValueError("Environment variables not set")
@@ -23,12 +22,14 @@ except KeyError as e:
 
 if __name__ == "__main__":
     get_token = GetToken(AUTH0_DOMAIN)
-    token = get_token.client_credentials(NON_INTERACTIVE_CLIENT_ID,
-                                         NON_INTERACTIVE_CLIENT_SECRET,
-                                         f'https://{AUTH0_DOMAIN}/api/v2/')
-    mgmt_api_token = token['access_token']
+    token = get_token.client_credentials(
+        NON_INTERACTIVE_CLIENT_ID,
+        NON_INTERACTIVE_CLIENT_SECRET,
+        f"https://{AUTH0_DOMAIN}/api/v2/",
+    )
+    mgmt_api_token = token["access_token"]
 
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client("s3")
 
     file_name = f'{datetime.today().strftime("%Y-%m-%d")}.csv'
     auth0 = Auth0(AUTH0_DOMAIN, mgmt_api_token)
@@ -36,8 +37,7 @@ if __name__ == "__main__":
     user_generator = get_users_from_auth0(auth0, last_login)
 
     # Keys within the dictionary returned by Auth0
-    columns = ["name", "nickname", "user_id",
-               "last_login", "logins_count", "email"]
+    columns = ["name", "nickname", "user_id", "last_login", "logins_count", "email"]
 
     rows = []
     user_count = 0
@@ -49,7 +49,6 @@ if __name__ == "__main__":
             print(user_count)
             rows.append([user[column] for column in columns])
         user_count += 1
-
 
     df = pd.DataFrame(columns=columns, data=rows)
     df.to_csv(file_name)
